@@ -23,7 +23,7 @@ var platforms;
 var cursors;
 var score = 0;
 var scoreText;
-
+var worldWidth = 9600;
 var game = new Phaser.Game(config);
 
 function preload ()
@@ -32,14 +32,32 @@ function preload ()
     this.load.image('ground', 'assets/platform.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
+    this.load.image('fon', 'assets/fon.jpg');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 
 function create ()
 {
-    this.add.image(0, 0, 'sky').setOrigin(0,0).setScale(1);
-
     platforms = this.physics.add.staticGroup();
+    this.add.image(0, 0, 'fon').setOrigin(0,0).setScale(1);
+   this.add.tileSprite(0,0 , worldWidth, 1080, "fon").setOrigin(0,0);
+   for ( var x=0 ; x<worldWidth; x=x+128)
+   {
+     console.log(x);
+     platforms.create(x , 1080-120, 'ground').setOrigin(0,0).refreshBody();
+   }
+    platforms = this.physics.add.staticGroup();
+    
+player = this.physics.add.sprite(100, 450, 'dude');
+player.setCollideWorldBounds(false);
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
+
+    this.cameras.main.setBounds(0,0, worldWidth,1080);
+    this.physics.world.setBounds(0,0, worldWidth,1080);
+    this.cameras.main.startFollow(player);
+
+
 
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
@@ -47,10 +65,7 @@ function create ()
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
 
-    player = this.physics.add.sprite(100, 450, 'dude');
-
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+    
 
     this.anims.create({
         key: 'left',
