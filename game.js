@@ -1,8 +1,8 @@
 
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 1920,
+    height: 1080,
     physics: {
         default: 'arcade',
         arcade: {
@@ -37,7 +37,7 @@ function preload ()
 
 function create ()
 {
-    this.add.image(400, 300, 'sky');
+    this.add.image(0, 0, 'sky').setOrigin(0,0).setScale(1);
 
     platforms = this.physics.add.staticGroup();
 
