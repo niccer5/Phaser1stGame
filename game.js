@@ -2,6 +2,7 @@ var config = {
     type: Phaser.AUTO,
     width: 1920,
     height: 1080,
+    parent:game,
     physics: {
         default: 'arcade',
         arcade: {
@@ -15,56 +16,59 @@ var config = {
         update: update
     }
 };
-
 var player;
 var stars;
+var bombs;
 var platforms;
 var cursors;
 var score = 0;
+var gameOver = false;
 var scoreText;
-var worldWidth = 9600;
 var game = new Phaser.Game(config);
+var worldWidth = 9600;
 
-function preload ()
-{
-    this.load.image('sky', 'assets/sky.png');
+function preload() {
+    
+    this.load.image('fon', 'assets/fon.jpg');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.image('fon', 'assets/fon.jpg');
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('dude',
+        'assets/dude.png',
+        { frameWidth: 32, frameHeight: 48 }
+    );
 }
 
-function create ()
-{
+function create() {
+  
+    this.add.tileSprite(0,0, worldWidth, 1080, "fon").setOrigin(0,0);
+   
     platforms = this.physics.add.staticGroup();
-    this.add.image(0, 0, 'fon').setOrigin(0,0).setScale(1);
-   this.add.tileSprite(0,0 , worldWidth, 1080, "fon").setOrigin(0,0);
-   for ( var x=0 ; x<worldWidth; x=x+128)
-   {
-     console.log(x);
-     platforms.create(x , 1080-120, 'ground').setOrigin(0,0).refreshBody();
-   }
-    platforms = this.physics.add.staticGroup();
-    
-player = this.physics.add.sprite(100, 450, 'dude');
-player.setCollideWorldBounds(false);
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+   
+    for (var x = 0; x < worldWidth; x = x + 384) {
+        console.log(x)
+        platforms.create(x, 1080 - 93, 'ground').setOrigin(0,0).refreshBody();
+    }
 
-    this.cameras.main.setBounds(0,0, worldWidth,1080);
-    this.physics.world.setBounds(0,0, worldWidth,1080);
+   
+    player = this.physics.add.sprite(1500, 900, 'dude');
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(false);
+    
+    this.cameras.main.setBounds(0,0,worldWidth, 1080);
+    this.physics.world.setBounds(0,0,worldWidth, 1080);
+    
     this.cameras.main.startFollow(player);
 
-
-
-    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-
-    platforms.create(600, 400, 'ground');
-    platforms.create(50, 250, 'ground');
-    platforms.create(750, 220, 'ground');
-
+    var x = 0;
+    while (x < worldWidth) {
+        var y = Phaser.Math.FloatBetween(540, 1080); 
+        platforms.create(x, y, 'ground').setScale(0.5).refreshBody(); 
+        x += Phaser.Math.FloatBetween(200, 800); 
+    }
     
+
+
 
     this.anims.create({
         key: 'left',
@@ -75,7 +79,7 @@ player.setCollideWorldBounds(false);
 
     this.anims.create({
         key: 'turn',
-        frames: [ { key: 'dude', frame: 4 } ],
+        frames: [{ key: 'dude', frame: 4 }],
         frameRate: 20
     });
 
@@ -85,13 +89,14 @@ player.setCollideWorldBounds(false);
         frameRate: 10,
         repeat: -1
     });
-
+    
+    
     cursors = this.input.keyboard.createCursorKeys();
-
+    
     stars = this.physics.add.group({
         key: 'star',
-        repeat: 11,
-        setXY: { x: 12, y: 0, stepX: 70 }
+        repeat: 111,
+        setXY: { x: 12, y: 0, stepX: 90 }
     });
 
     stars.children.iterate(function (child) {
@@ -100,45 +105,74 @@ player.setCollideWorldBounds(false);
 
     });
     bombs = this.physics.add.group();
-
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
+    
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
+
+    
     this.physics.add.overlap(player, stars, collectStar, null, this);
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 }
 
-function update ()
+function update() 
 {
-    if (cursors.left.isDown)
+    if (gameOver)
+    {
+        return;
+    }
+    
+    if (cursors.left.isDown) 
     {
         player.setVelocityX(-160);
 
         player.anims.play('left', true);
     }
-    else if (cursors.right.isDown)
-    {
+    else if (cursors.right.isDown) {
         player.setVelocityX(160);
 
         player.anims.play('right', true);
     }
-    else
-    {
+    else {
         player.setVelocityX(0);
 
         player.anims.play('turn');
     }
 
-    if (cursors.up.isDown && player.body.touching.down)
+    if (cursors.up.isDown && player.body.touching.down) {
+        player.setVelocityY(-480);
+    }
+
+}
+
+function collectStar(player, star) 
+{
+    star.disableBody(true, true);
+    score += 10;
+    scoreText.setText('Score: ' + score);
+
+    
+    var x = Phaser.Math.Between(0, worldWidth);
+    var y = Phaser.Math.Between(0, config.height);
+    var bomb = bombs.create(x, 0, 'bomb');
+    bomb.setScale(0.25);
+    bomb.setBounce(1);
+    bomb.setCollideWorldBounds(true);
+    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+
+    if (stars.countActive(true) === 0) 
     {
-        player.setVelocityY(-330);
+        
+        stars.children.iterate(function (child) {
+            child.enableBody(true, child.x, 0, true, true);
+            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+        });
     }
 }
 
-
-function hitBomb (player, bomb)
+function hitBomb(player, bomb) 
 {
     this.physics.pause();
 
@@ -147,28 +181,4 @@ function hitBomb (player, bomb)
     player.anims.play('turn');
 
     gameOver = true;
-}
-function collectStar (player, star)
-{
-    star.disableBody(true, true);
-
-    score += 10;
-    scoreText.setText('Score: ' + score);
-
-    if (stars.countActive(true) === 0)
-    {
-        stars.children.iterate(function (child) {
-
-            child.enableBody(true, child.x, 0, true, true);
-
-        });
-
-        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-        var bomb = bombs.create(x, 16, 'bomb');
-        bomb.setBounce(1);
-        bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-
-    }
 }
