@@ -31,8 +31,10 @@ function preload() {
     
     this.load.image('fon', 'assets/fon.jpg');
     this.load.image('ground', 'assets/platform.png');
+    this.load.image('Stone', 'assets/Stone.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
+    this.load.image('tree', 'assets/Tree_1.png');
     this.load.spritesheet('dude',
         'assets/dude.png',
         { frameWidth: 32, frameHeight: 48 }
@@ -45,13 +47,27 @@ function create() {
    
     platforms = this.physics.add.staticGroup();
    
-    for (var x = 0; x < worldWidth; x = x + 384) {
+    for (var x = 0; x < worldWidth; x = x + 400) {
         console.log(x)
         platforms.create(x, 1080 - 93, 'ground').setOrigin(0,0).refreshBody();
     }
+    
+    
+    stone = this.physics.add.staticGroup();
+     for(var x=0; x<worldWidth; x=x+Phaser.Math.FloatBetween(400,800)){
+      var y = 987;
+      console.log(x,y);
+      stone.create(x,y, 'Stone').setOrigin(0,1).setScale(Phaser.Math.FloatBetween(1,3));
+     }
 
+     trees = this.physics.add.staticGroup();
+     for(var x=0; x<worldWidth; x=x+Phaser.Math.FloatBetween(400,800)){
+      var y = 987;
+      console.log(x,y);
+      trees.create(x,y, 'tree').setOrigin(0,1).setScale(Phaser.Math.FloatBetween(1,3));
+     }
    
-    player = this.physics.add.sprite(1500, 900, 'dude');
+    player = this.physics.add.sprite(0, 0, 'dude').setDepth(2);
     player.setBounce(0.2);
     player.setCollideWorldBounds(false);
     
