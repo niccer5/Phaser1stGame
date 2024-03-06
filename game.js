@@ -3,7 +3,7 @@ var config = {
     width: 1920,
     height: 1080,
     parent:game,
-    playerSpeed:1000 ,
+    playerSpeed:400 ,
     physics: {
         default: 'arcade',
         arcade: {
@@ -34,6 +34,12 @@ function preload() {
     this.load.image('ground', 'assets/platform.png');
     this.load.image('Stone', 'assets/Stone.png');
     this.load.image('star', 'assets/star.png');
+    //повітряні платформи
+    this.load.image('13', 'assets/13.png');
+    this.load.image('14', 'assets/14.png');
+    this.load.image('15', 'assets/15.png');
+
+
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('tree', 'assets/Tree_1.png');
     this.load.spritesheet('dude',
@@ -44,10 +50,24 @@ function preload() {
 
 function create() {
   
-    this.add.tileSprite(0,0, worldWidth, 1080, "fon").setOrigin(0,0);
+    this.add.tileSprite(0,0, worldWidth, 1080, "fon")
+    .setOrigin(0,0)
+    .setScale(1)
+    .setDepth(0);
    
     platforms = this.physics.add.staticGroup();
-   
+    for (var x=0 ; x<worldWidth ; x = x+Phaser.Math.Between(400,500)) {
+       var yStep = Phaser.Math.Between(2, 5);
+       var y = 93 * yStep
+       platforms.create(x ,y , '13');
+       var  i;
+       for (i=1 ; i<Phaser.Math.Between(0, 5); i++) {
+        platforms.create(x+128 * i , y , '14');
+       }
+          platforms.create(x+128* i , y ,'15');
+
+
+    }
     for (var x = 0; x < worldWidth; x = x + 400) {
         console.log(x)
         platforms.create(x, 1080 - 93, 'ground').setOrigin(0,0).refreshBody();
