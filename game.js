@@ -56,12 +56,12 @@ function create() {
     .setDepth(0);
    
     platforms = this.physics.add.staticGroup();
-    for (var x=0 ; x<worldWidth ; x = x+Phaser.Math.Between(400,500)) {
-       var yStep = Phaser.Math.Between(2, 5);
-       var y = 93 * yStep
+    for (var x=0 ; x<worldWidth ; x = x+Phaser.Math.Between(200,300)) {
+       var yStep = Phaser.Math.Between(1, 4);
+       var y = 700 / yStep
        platforms.create(x ,y , '13');
        var  i;
-       for (i=1 ; i<Phaser.Math.Between(0, 5); i++) {
+       for (i=1 ; i<Phaser.Math.Between(0, 4); i++) {
         platforms.create(x+128 * i , y , '14');
        }
           platforms.create(x+128* i , y ,'15');
@@ -75,17 +75,17 @@ function create() {
     
     
     stone = this.physics.add.staticGroup();
-     for(var x=0; x<worldWidth; x=x+Phaser.Math.FloatBetween(400,800)){
+     for(var x=0; x<worldWidth; x=x+Phaser.Math.FloatBetween(500,800)){
       var y = 987;
       console.log(x,y);
-      stone.create(x,y, 'Stone').setOrigin(0,1).setScale(Phaser.Math.FloatBetween(1,3));
+      stone.create(x,y, 'Stone').setOrigin(0,1).setScale(Phaser.Math.FloatBetween(1,2));
      }
 
      trees = this.physics.add.staticGroup();
-     for(var x=0; x<worldWidth; x=x+Phaser.Math.FloatBetween(400,800)){
+     for(var x=0; x<worldWidth; x=x+Phaser.Math.FloatBetween(200,300)){
       var y = 987;
       console.log(x,y);
-      trees.create(x,y, 'tree').setOrigin(0,1).setScale(Phaser.Math.FloatBetween(1,3));
+      trees.create(x,y, 'tree').setOrigin(0,1).setScale(Phaser.Math.FloatBetween(1,2));
      }
    
     player = this.physics.add.sprite(0, 0, 'dude').setDepth(2);
