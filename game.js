@@ -39,6 +39,11 @@ function preload() {
     this.load.image('14', 'assets/14.png');
     this.load.image('15', 'assets/15.png');
 
+    //ground
+    this.load.image('1', 'assets/1.png');
+    this.load.image('2', 'assets/2.png');
+    this.load.image('3', 'assets/3.png');
+
 
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('tree', 'assets/Tree_1.png');
@@ -68,19 +73,31 @@ function create() {
 
 
     }
+    for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(400, 500)) {
+        
+        var y = 1020
+        platforms.create(x, y, '1');
+        var i;
+        for (i = 1; i < Phaser.Math.Between(0, 5); i++) {
+            platforms.create(x + 128 * i, y, '2');
+        }
+        platforms.create(x + 128 * i, y, '3');
+
+
+    }
     
 
 
     stone = this.physics.add.staticGroup();
-    for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(500, 800)) {
-        var y = 987;
+    for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(400, 500)) {
+        var y = 960;
         console.log(x, y);
         stone.create(x, y, 'Stone').setOrigin(0, 1).setScale(Phaser.Math.FloatBetween(1, 2));
     }
 
     trees = this.physics.add.staticGroup();
-    for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(200, 300)) {
-        var y = 987;
+    for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(400, 500)) {
+        var y = 960;
         console.log(x, y);
         trees.create(x, y, 'tree').setOrigin(0, 1).setScale(Phaser.Math.FloatBetween(1, 2));
     }
@@ -134,7 +151,9 @@ function create() {
 
     });
     bombs = this.physics.add.group();
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
+    .setScrollFactor(0)
+    .setOrigin(0,0);
 
 
     this.physics.add.collider(player, platforms);
