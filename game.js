@@ -23,8 +23,10 @@ var bombs;
 var platforms;
 var cursors;
 var score = 0;
+var lives = 3
 var gameOver = false;
 var scoreText;
+var livesText;
 var game = new Phaser.Game(config);
 var worldWidth = config.width * 2;
 
@@ -154,6 +156,9 @@ function create() {
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
     .setScrollFactor(0)
     .setOrigin(0,0);
+    livesText = this.add.text(16, 48, 'Lives: 3', { fontSize: '32px', fill: '#000' })
+    .setScrollFactor(0)
+    .setOrigin(0,0);
 
 
     this.physics.add.collider(player, platforms);
@@ -169,7 +174,10 @@ function update() {
     if (gameOver) {
         return;
     }
-
+     if (player.y >=1200) {
+        hitBomb(player);
+        return;
+     }
     if (cursors.left.isDown) {
         player.setVelocityX(-config.playerSpeed);
 
