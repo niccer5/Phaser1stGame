@@ -254,4 +254,10 @@ function hitBomb(player, bomb) {
         callbackScope: this,
         loop: false
     });
+    if (lives === 0) {
+        gameOver = true;
+        this.physics.pause();
+        player.setTint(0xff0000);
+        player.anims.play('turn');
+    }
 }
