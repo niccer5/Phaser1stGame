@@ -245,4 +245,13 @@ function hitBomb(player, bomb) {
     var direction = (bomb.x < player.x) ? 1 : -1;
     bomb.setVelocityX(300 * direction);
     player.setTint(0xff0000);
+    this.time.addEvent({
+        delay: 3000,
+        callback: function() {
+            player.clearTint(); 
+            isHitByBomb = false;
+        },
+        callbackScope: this,
+        loop: false
+    });
 }
