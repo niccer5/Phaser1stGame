@@ -107,7 +107,18 @@ function create() {
     player = this.physics.add.sprite(0, 0, 'dude').setDepth(2);
     player.setBounce(0.2);
     player.setCollideWorldBounds(false);
-
+    
+    var resetButton = this.add.text(50, 50, 'reset', { fontSize: '18px', fill: '#000'} )
+    .setInteractive()
+    .setScale(2)
+    .setScrollFactor(0);
+    
+    resetButton.on('pointerdown', () => {      
+        this.scene.restart(); 
+        lives = 3
+        score = 0
+        gameOver = false
+    });
     this.cameras.main.setBounds(0, 0, worldWidth, 1080);
     this.physics.world.setBounds(0, 0, worldWidth, 1080);
 
@@ -156,9 +167,9 @@ function create() {
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
     .setScrollFactor(0)
     .setOrigin(0,0);
-    livesText = this.add.text(16, 48, 'Lives: 3', { fontSize: '32px', fill: '#000' })
-    .setScrollFactor(0)
-    .setOrigin(0,0);
+    livesText = this.add.text(1700, 16, 'Lives: ' + lives, { fontSize: '32px', fill: '000'})
+        .setOrigin(0,0)
+        .setScrollFactor(0);
 
 
     this.physics.add.collider(player, platforms);
