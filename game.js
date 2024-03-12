@@ -246,7 +246,7 @@ function hitBomb(player, bomb) {
     bomb.setVelocityX(300 * direction);
     player.setTint(0xff0000);
     this.time.addEvent({
-        delay: 3000,
+        delay: 1000,
         callback: function() {
             player.clearTint(); 
             isHitByBomb = false;
