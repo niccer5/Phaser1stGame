@@ -233,13 +233,16 @@ function collectStar(player, star) {
         });
     }
 }
-
+         var isHitByBomb = false;
 function hitBomb(player, bomb) {
-    this.physics.pause();
+    if (isHitByBomb) {
+        return;
+    }
+    isHitByBomb = true;
 
-    player.setTint(0xff0000);
-
-    player.anims.play('turn');
-
-    gameOver = true;
+    lives = lives - 1;
+    livesText.setText('Lives: ' + lives);
+    var direction = (bomb.x < player.x) ? 1 : -1;
+    bomb.setVelocityX(300 * direction);
+    
 }
