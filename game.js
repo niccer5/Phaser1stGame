@@ -244,5 +244,5 @@ function hitBomb(player, bomb) {
     livesText.setText('Lives: ' + lives);
     var direction = (bomb.x < player.x) ? 1 : -1;
     bomb.setVelocityX(300 * direction);
-    
+    player.setTint(0xff0000);
 }
