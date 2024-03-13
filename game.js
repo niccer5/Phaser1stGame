@@ -108,7 +108,17 @@ function create() {
     player.setBounce(0.2);
     player.setCollideWorldBounds(false);
     
+    var resetButton = this.add.text(50, 50, 'reset', { fontSize: '18px', fill: '#000'} )
+    .setInteractive()
+    .setScale(2)
+    .setScrollFactor(0);
     
+    resetButton.on('pointerdown', () => {      
+        this.scene.restart(); 
+        life = 3
+        score = 0
+        gameOver = false
+    });
     this.cameras.main.setBounds(0, 0, worldWidth, 1080);
     this.physics.world.setBounds(0, 0, worldWidth, 1080);
 
