@@ -7,7 +7,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 300 },
+            gravity: { y: 200 },
             debug: false
         }
     },
@@ -46,6 +46,8 @@ function preload() {
     this.load.image('2', 'assets/2.png');
     this.load.image('3', 'assets/3.png');
 
+    this.load.image('17', 'assets/17.png');
+
 
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('tree', 'assets/Tree_1.png');
@@ -61,6 +63,14 @@ function create() {
         .setOrigin(0, 0)
         .setScale(1)
         .setDepth(0);
+
+    this.add.tileSprite(0, 1000, worldWidth, 1080, "17")
+        .setOrigin(0, 0)
+        .setScale(1)
+        .setDepth(0);
+
+
+       
 //повітряні платформи
     platforms = this.physics.add.staticGroup();
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(200, 300)) {
