@@ -56,12 +56,12 @@ function preload() {
 }
 
 function create() {
-
+//фон
     this.add.tileSprite(0, 0, worldWidth, 1080, "fon")
         .setOrigin(0, 0)
         .setScale(1)
         .setDepth(0);
-
+//повітряні платформи
     platforms = this.physics.add.staticGroup();
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(200, 300)) {
         var yStep = Phaser.Math.Between(1, 4);
@@ -75,6 +75,7 @@ function create() {
 
 
     }
+    //платформи на землі
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(400, 500)) {
         
         var y = 1020
@@ -89,7 +90,7 @@ function create() {
     }
     
 
-
+     //камінці і дерева
     stone = this.physics.add.staticGroup();
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(400, 500)) {
         var y = 960;
@@ -107,7 +108,7 @@ function create() {
     player = this.physics.add.sprite(0, 0, 'dude').setDepth(2);
     player.setBounce(0.2);
     player.setCollideWorldBounds(false);
-    
+    //кнопка перезапуску
     var resetButton = this.add.text(50, 50, 'reset', { fontSize: '18px', fill: '#000'} )
     .setInteractive()
     .setScale(2)
@@ -119,6 +120,7 @@ function create() {
         score = 0
         gameOver = false
     });
+    //камера
     this.cameras.main.setBounds(0, 0, worldWidth, 1080);
     this.physics.world.setBounds(0, 0, worldWidth, 1080);
 
@@ -128,7 +130,7 @@ function create() {
 
 
 
-
+   //анімація персонажа
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -151,7 +153,7 @@ function create() {
 
 
     cursors = this.input.keyboard.createCursorKeys();
-
+    //зірки
     stars = this.physics.add.group({
         key: 'star',
         repeat: 111,
@@ -163,6 +165,7 @@ function create() {
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
     });
+    //бомби
     bombs = this.physics.add.group();
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
     .setScrollFactor(0)
@@ -171,12 +174,12 @@ function create() {
         .setOrigin(0,0)
         .setScrollFactor(0);
 
-
+     //колізії
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
 
-
+      
     this.physics.add.overlap(player, stars, collectStar, null, this);
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 }
@@ -210,7 +213,7 @@ function update() {
     }
 
 }
-
+//збирання зірок
 function collectStar(player, star) {
     star.disableBody(true, true);
     score += 10;
@@ -234,6 +237,7 @@ function collectStar(player, star) {
     }
 }
          var isHitByBomb = false;
+         //колізія з бомбами і сердчека
 function hitBomb(player, bomb) {
     if (isHitByBomb) {
         return;
@@ -254,6 +258,7 @@ function hitBomb(player, bomb) {
         callbackScope: this,
         loop: false
     });
+    //закінчення гри при кількості життів = 0 
     if (life === 0) {
         gameOver = true;
         this.physics.pause();
@@ -261,6 +266,7 @@ function hitBomb(player, bomb) {
         player.anims.play('turn');
     }
 }
+// функції сердечки
 function  showLife(){
     var lifeLine = ''
     for (var i = 0; i < life ; i++ ) {
