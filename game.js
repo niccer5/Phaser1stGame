@@ -23,10 +23,10 @@ var bombs;
 var platforms;
 var cursors;
 var score = 0;
-var lives = 3
+var life = 3
 var gameOver = false;
 var scoreText;
-var livesText;
+var lifesText;
 var game = new Phaser.Game(config);
 var worldWidth = config.width * 2;
 
@@ -108,23 +108,13 @@ function create() {
     player.setBounce(0.2);
     player.setCollideWorldBounds(false);
     
-    var resetButton = this.add.text(50, 50, 'reset', { fontSize: '18px', fill: '#000'} )
-    .setInteractive()
-    .setScale(2)
-    .setScrollFactor(0);
     
-    resetButton.on('pointerdown', () => {      
-        this.scene.restart(); 
-        lives = 3
-        score = 0
-        gameOver = false
-    });
     this.cameras.main.setBounds(0, 0, worldWidth, 1080);
     this.physics.world.setBounds(0, 0, worldWidth, 1080);
 
     this.cameras.main.startFollow(player);
 
-    
+   
 
 
 
@@ -167,7 +157,7 @@ function create() {
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
     .setScrollFactor(0)
     .setOrigin(0,0);
-    livesText = this.add.text(1700, 16, 'Lives: ' + lives, { fontSize: '32px', fill: '000'})
+    lifeText = this.add.text(1700, 16, showLife() , { fontSize: '32px', fill: '000'})
         .setOrigin(0,0)
         .setScrollFactor(0);
 
@@ -185,8 +175,8 @@ function update() {
     if (gameOver) {
         return;
     }
-     if (player.y >=1200) {
-        hitBomb(player);
+     if (player.y >=1080) {
+        ;
         return;
      }
     if (cursors.left.isDown) {
@@ -240,8 +230,8 @@ function hitBomb(player, bomb) {
     }
     isHitByBomb = true;
 
-    lives = lives - 1;
-    livesText.setText('Lives: ' + lives);
+    life = life - 1;
+    lifeText.setText('Lives: ' + showLife());
     var direction = (bomb.x < player.x) ? 1 : -1;
     bomb.setVelocityX(300 * direction);
     player.setTint(0xff0000);
@@ -254,10 +244,28 @@ function hitBomb(player, bomb) {
         callbackScope: this,
         loop: false
     });
-    if (lives === 0) {
+    if (life === 0) {
         gameOver = true;
         this.physics.pause();
         player.setTint(0xff0000);
         player.anims.play('turn');
     }
 }
+function  showLife(){
+    var lifeLine = ''
+    for (var i = 0; i < life ; i++ ) {
+     lifeLine = lifeLine + '❤'
+     }
+     return lifeLine
+}
+var resetButton = this.add.text(50, 50, 'reset', { fontSize: '18px', fill: '#000'} )
+.setInteractive()
+.setScale(2)
+.setScrollFactor(0);
+
+resetButton.on('pointerdown', () => {      
+    this.scene.restart(); 
+    life = 3
+    score = 0
+    gameOver = false
+});
