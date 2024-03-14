@@ -18,6 +18,7 @@ var config = {
     }
 };
 var player;
+var resetButton;
 var stars;
 var bombs;
 var platforms;
@@ -33,6 +34,7 @@ var worldWidth = config.width * 2;
 function preload() {
 
     this.load.image('fon', 'assets/fon.jpg');
+    this.load.image('resetButton', 'assets/R.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('Stone', 'assets/Stone.png');
     this.load.image('star', 'assets/star.png');
@@ -119,17 +121,17 @@ function create() {
     player.setBounce(0.2);
     player.setCollideWorldBounds(false);
     //кнопка перезапуску
-    var resetButton = this.add.text(50, 50, 'reset', { fontSize: '18px', fill: '#000'} )
+    resetButton = this.add.image(900, 500, 'resetButton')
+    resetButton.setOrigin(0,0)
+    .setDepth(10)
+    .setScrollFactor(0)
     .setInteractive()
-    .setScale(2)
-    .setScrollFactor(0);
-    
-    resetButton.on('pointerdown', () => {      
-        this.scene.restart(); 
-        life = 3
-        score = 0
-        gameOver = false
+    .on('pointerdown', function() {
+        // Перезавантаження гри
+        location.reload();
     });
+
+    resetButton.setVisible(false);
     //камера
     this.cameras.main.setBounds(0, 0, worldWidth, 1080);
     this.physics.world.setBounds(0, 0, worldWidth, 1080);
@@ -196,7 +198,10 @@ function create() {
 
 function update() {
     if (gameOver) {
-        return;
+        gameOver = true;
+        this.physics.pause();
+        player.setTint(0xff0000);
+        player.anims.play('turn');
     }
      if (player.y >=1080) {
         ;
@@ -270,6 +275,7 @@ function hitBomb(player, bomb) {
     });
     //закінчення гри при кількості життів = 0 
     if (life === 0) {
+        resetButton.setVisible(true);
         gameOver = true;
         this.physics.pause();
         player.setTint(0xff0000);
@@ -284,14 +290,3 @@ function  showLife(){
      }
      return lifeLine
 }
-var resetButton = this.add.text(50, 50, 'reset', { fontSize: '18px', fill: '#000'} )
-.setInteractive()
-.setScale(2)
-.setScrollFactor(0);
-
-resetButton.on('pointerdown', () => {      
-    this.scene.restart(); 
-    life = 3
-    score = 0
-    gameOver = false
-});
