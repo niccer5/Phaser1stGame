@@ -204,8 +204,28 @@ function update() {
         player.anims.play('turn');
     }
      if (player.y >=1080) {
-        ;
-        return;
+        resetButton.setVisible(true);
+        gameOver = true;
+        this.physics.pause();
+        player.setTint(0xff0000);
+        player.anims.play('turn');
+    
+     }
+     if (player.x >= 2000*2) {
+        resetButton.setVisible(true);
+        gameOver = true;
+        this.physics.pause();
+        player.setTint(0xff0000);
+        player.anims.play('turn');
+    
+     }
+     if (player.x <= -50) {
+        resetButton.setVisible(true);
+        gameOver = true;
+        this.physics.pause();
+        player.setTint(0xff0000);
+        player.anims.play('turn');
+    
      }
     if (cursors.left.isDown) {
         player.setVelocityX(-config.playerSpeed);
