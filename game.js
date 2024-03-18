@@ -60,7 +60,7 @@ function preload() {
 }
 
 function create() {
-//фон
+    //фон
     this.add.tileSprite(0, 0, worldWidth, 1080, "fon")
         .setOrigin(0, 0)
         .setScale(1)
@@ -72,8 +72,8 @@ function create() {
         .setDepth(0);
 
 
-       
-//повітряні платформи
+
+    //повітряні платформи
     platforms = this.physics.add.staticGroup();
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(200, 300)) {
         var yStep = Phaser.Math.Between(1, 4);
@@ -89,7 +89,7 @@ function create() {
     }
     //платформи на землі
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(400, 500)) {
-        
+
         var y = 1020
         platforms.create(x, y, '1');
         var i;
@@ -100,9 +100,9 @@ function create() {
 
 
     }
-    
 
-     //камінці і дерева
+
+    //камінці і дерева
     stone = this.physics.add.staticGroup();
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(400, 500)) {
         var y = 960;
@@ -122,14 +122,14 @@ function create() {
     player.setCollideWorldBounds(false);
     //кнопка перезапуску
     resetButton = this.add.image(900, 500, 'resetButton')
-    resetButton.setOrigin(0,0)
-    .setDepth(10)
-    .setScrollFactor(0)
-    .setInteractive()
-    .on('pointerdown', function() {
-        // Перезавантаження гри
-        location.reload();
-    });
+    resetButton.setOrigin(0, 0)
+        .setDepth(10)
+        .setScrollFactor(0)
+        .setInteractive()
+        .on('pointerdown', function () {
+            // Перезавантаження гри
+            location.reload();
+        });
 
     resetButton.setVisible(false);
     //камера
@@ -138,11 +138,11 @@ function create() {
 
     this.cameras.main.startFollow(player);
 
-   
 
 
 
-   //анімація персонажа
+
+    //анімація персонажа
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -180,18 +180,18 @@ function create() {
     //бомби
     bombs = this.physics.add.group();
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
-    .setScrollFactor(0)
-    .setOrigin(0,0);
-    lifeText = this.add.text(1700, 16, showLife() , { fontSize: '32px', fill: '000'})
-        .setOrigin(0,0)
+        .setScrollFactor(0)
+        .setOrigin(0, 0);
+    lifeText = this.add.text(1700, 16, showLife(), { fontSize: '32px', fill: '000' })
+        .setOrigin(0, 0)
         .setScrollFactor(0);
 
-     //колізії
+    //колізії
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
 
-      
+
     this.physics.add.overlap(player, stars, collectStar, null, this);
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 }
@@ -203,30 +203,30 @@ function update() {
         player.setTint(0xff0000);
         player.anims.play('turn');
     }
-     if (player.y >=1080) {
+    if (player.y >= 1080) {
         resetButton.setVisible(true);
         gameOver = true;
         this.physics.pause();
         player.setTint(0xff0000);
         player.anims.play('turn');
-    
-     }
-     if (player.x >= 2000*2) {
+
+    }
+    if (player.x >= 2000 * 2) {
         resetButton.setVisible(true);
         gameOver = true;
         this.physics.pause();
         player.setTint(0xff0000);
         player.anims.play('turn');
-    
-     }
-     if (player.x <= -50) {
+
+    }
+    if (player.x <= -50) {
         resetButton.setVisible(true);
         gameOver = true;
         this.physics.pause();
         player.setTint(0xff0000);
         player.anims.play('turn');
-    
-     }
+
+    }
     if (cursors.left.isDown) {
         player.setVelocityX(-config.playerSpeed);
 
@@ -271,8 +271,8 @@ function collectStar(player, star) {
         });
     }
 }
-         var isHitByBomb = false;
-         //колізія з бомбами і сердчека
+var isHitByBomb = false;
+//колізія з бомбами і сердчека
 function hitBomb(player, bomb) {
     if (isHitByBomb) {
         return;
@@ -280,14 +280,14 @@ function hitBomb(player, bomb) {
     isHitByBomb = true;
 
     life = life - 1;
-    lifeText.setText('Lives: ' + showLife());
+    lifeText.setText( showLife());
     var direction = (bomb.x < player.x) ? 1 : -1;
     bomb.setVelocityX(300 * direction);
     player.setTint(0xff0000);
     this.time.addEvent({
         delay: 1000,
-        callback: function() {
-            player.clearTint(); 
+        callback: function () {
+            player.clearTint();
             isHitByBomb = false;
         },
         callbackScope: this,
@@ -303,10 +303,10 @@ function hitBomb(player, bomb) {
     }
 }
 // функції сердечки
-function  showLife(){
+function showLife() {
     var lifeLine = ''
-    for (var i = 0; i < life ; i++ ) {
-     lifeLine = lifeLine + '❤'
-     }
-     return lifeLine
+    for (var i = 0; i < life; i++) {
+        lifeLine = lifeLine + '❤'
+    }
+    return lifeLine
 }
