@@ -34,7 +34,7 @@ var worldWidth = config.width * 2;
 function preload() {
 
     this.load.image('fon', 'assets/fon.jpg');
-    this.load.image('life', 'assets/life.png');
+    this.load.image('heart', 'assets/life.png');
     this.load.image('resetButton', 'assets/R.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('Stone', 'assets/Stone.png');
@@ -181,13 +181,13 @@ function create() {
     //бомби
     bombs = this.physics.add.group();
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
-<<<<<<< HEAD
+
     .setScrollFactor(0)
     .setOrigin(0,0);
-    lifeText = this.add.text(1700, 16, showLife(), { fontSize: '32px', fill: '#ffffff' })
+     lifeText = this.add.text(1700, 16, showLife(), { fontSize: '32px', fill: '#ffffff' })
     .setOrigin(1, 0)
     .setScrollFactor(0);
-    heart = this.physics.add.group({
+     heart = this.physics.add.group({
         key: 'heart',
         repeat: 10,
         setXY: { x: 12, y: 0, stepX: Phaser.Math.FloatBetween(1000, 2500) }
@@ -201,20 +201,17 @@ function create() {
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
     });
-=======
-        .setScrollFactor(0)
-        .setOrigin(0, 0);
-    lifeText = this.add.text(1700, 16, showLife(), { fontSize: '32px', fill: '000' })
-        .setOrigin(0, 0)
-        .setScrollFactor(0);
->>>>>>> 2396f61fb27a8387b37ad2ffeee2ac7ffd64c965
+
+        
+    
+
 
     //колізії
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(heart, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
-
+    this.physics.add.overlap(player, heart, collectHeart, null, this);
 
     this.physics.add.overlap(player, stars, collectStar, null, this);
     this.physics.add.collider(player, bombs, hitBomb, null, this);
@@ -344,3 +341,5 @@ function collectHeart(player, heart) {
 
     console.log(life)
 }
+
+
