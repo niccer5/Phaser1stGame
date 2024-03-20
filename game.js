@@ -22,11 +22,14 @@ var resetButton;
 var stars;
 var bombs;
 var platforms;
+var enemyCount = 2;
 var cursors;
+var enemy ;
 var score = 0;
 var life = 3
 var gameOver = false;
 var scoreText;
+var enemyText;
 var lifesText;
 var game = new Phaser.Game(config);
 var worldWidth = config.width * 2;
@@ -38,6 +41,7 @@ function preload() {
     this.load.image('resetButton', 'assets/R.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('Stone', 'assets/Stone.png');
+    this.load.image('enemy', 'assets/enemy.png');
     this.load.image('star', 'assets/star.png');
     //повітряні платформи
     this.load.image('13', 'assets/13.png');
@@ -89,7 +93,7 @@ function create() {
 
     }
     //платформи на землі
-    for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(400, 500)) {
+    for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(100, 400)) {
 
         var y = 1020
         platforms.create(x, y, '1');
@@ -184,8 +188,13 @@ function create() {
 
     .setScrollFactor(0)
     .setOrigin(0,0);
-     lifeText = this.add.text(1700, 16, showLife(), { fontSize: '32px', fill: '#ffffff' })
-    .setOrigin(1, 0)
+    enemyText = this.add.text(0 , 50 , showTextSymbols('👾' , enemyCount), { fontSize: '32px', fill: '#000' })
+
+    .setOrigin(0,0)
+    .setScrollFactor(0);
+
+    lifeText = this.add.text(1700, 16, showLife(), { fontSize: '32px', fill: '#ffffff' })
+    .setOrigin(0, 0)
     .setScrollFactor(0);
      heart = this.physics.add.group({
         key: 'heart',
@@ -202,6 +211,26 @@ function create() {
 
     });
 
+    enemy = this.physics.add.group({
+     key:'enemy' ,
+     repeat: enemyCount ,
+     setXY: {x: 1000 , y: 1080 - 150 , stepX: Phaser.Math.FloatBetween(300,500) }
+
+
+
+    });
+
+    enemy.children.iterate(function(child) {
+    child
+    .setCollideWorldBounds(true)
+    .setVelocityX(Phaser.Math.FloatBetween(-500 , 500));
+
+
+
+    });
+
+    
+
         
     
 
@@ -212,12 +241,31 @@ function create() {
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
     this.physics.add.overlap(player, heart, collectHeart, null, this);
-
+    
     this.physics.add.overlap(player, stars, collectStar, null, this);
     this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+    this.physics.add.collider(enemy, platforms);
+    this.physics.add.collider(player, enemy, () => {
+     player.x = player.x + Phaser.Math.FloatBetween(-200 , 200);
+     player.y = player.y + Phaser.Math.FloatBetween(200 , 400);
+    }, null ,this);
 }
 
 function update() {
+    if (Math.abs (player.x - enemy.x) < 600 ) {
+     enemy.moveTo(player,player.x,player.y, 300,1)
+    }
+     enemy.children.iterate((child) => {
+      if(Math.random()<0.05){
+        child.setVelocityX(Phaser.Math.FloatBetween(-500,500))
+      }
+
+
+
+     })
+    
+    
     if (gameOver) {
         gameOver = true;
         this.physics.pause();
@@ -341,5 +389,13 @@ function collectHeart(player, heart) {
 
     console.log(life)
 }
+function showTextSymbols(symbol , count ) {
+var symbolLine = ''
 
+for ( var i = 0; i < count; i++){
+symbolLine = symbolLine + symbol
+
+}
+return symbolLine
+}
 
